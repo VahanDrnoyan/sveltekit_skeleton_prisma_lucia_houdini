@@ -11,16 +11,32 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  auth_session  Session[]
-  auth_key      Key[]
-  email         String?   @unique
-  emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  username      String    @unique
+  id             String    @id @default(cuid())
+  auth_session   Session[]
+  auth_key       Key[]
+  email          String?   @unique
+  email_verified Boolean?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  username       String    @unique
 
   @@map("auth_users")
+}
+
+model Email_Verification_Token {
+  id      String @id
+  expires BigInt
+  user_id String
+
+  @@map("email_verification_token")
+}
+
+model Password_Reset_Token {
+  id      String @id
+  expires BigInt
+  user_id String
+
+  @@map("password_reset_token")
 }
 
 model Session {

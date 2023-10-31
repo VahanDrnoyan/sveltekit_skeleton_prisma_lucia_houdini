@@ -13,7 +13,13 @@ export const auth = lucia({
 		session: "session",
 	}),
 	env: dev ? 'DEV' : 'PROD',
-	middleware: sveltekit()
+	middleware: sveltekit(),
+	getUserAttributes: (data) => {
+		return {
+			email: data.email,
+			email_erified: data.email_verified 
+		};
+	}
 	
 });
 export type Auth = typeof auth

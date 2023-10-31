@@ -9,6 +9,11 @@ declare global {
 			username: string
 		}
 	}
+	type DatabaseUserAttributes = {
+		email: string;
+		email_verified: boolean;
+	};
+	type DatabaseSessionAttributes = Record<string, never>;
 }
 
 declare namespace App {

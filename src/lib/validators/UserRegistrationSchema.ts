@@ -1,4 +1,4 @@
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 const UserRegistrationSchema = z
 	.object({
@@ -11,17 +11,17 @@ const UserRegistrationSchema = z
 			// .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
 		password_repeat: z.string()
 	})
-	.refine((data) => {
+	.superRefine((data, ctx) => {
 		if (data.password !== data.password_repeat) {
-			return new ZodError([
+			ctx.addIssue(
 				{
 				  code: "invalid_type",
 				  expected: "string",
 				  received: "void",
-				  path: ["repeat_password"],
+				  path: ["password_repeat"],
 				  message: "The Repeat password field is invalid.",
 				},
-			  ]);
+			  );
 		}
 
 		return true;

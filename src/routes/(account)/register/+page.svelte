@@ -1,8 +1,10 @@
 <script>
+	import FormErrorMessage from '$lib/components/FormErrorMessage.svelte';
 	import SocialLogin from '$lib/components/SocialLogin.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	export let data;
 	const { form, errors, constraints, enhance } = superForm(data.form);
+	console.log($errors)
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
@@ -23,7 +25,9 @@
 						{...$constraints.username}
 					/>
 					{#if $errors.username}
-						<span class="text-red-400">{$errors.username}</span>
+						<FormErrorMessage>
+							{$errors.username}
+						</FormErrorMessage>
 					{/if}
 
 					<input
@@ -38,7 +42,9 @@
 						{...$constraints.email}
 					/>
 					{#if $errors.email}
-						<span class="text-red-400">{$errors.email}</span>
+						<FormErrorMessage>
+							{$errors.email}
+						</FormErrorMessage>
 					{/if}
 					<input
 						class="input mb-4"
@@ -52,7 +58,9 @@
 						{...$constraints.password}
 					/>
 					{#if $errors.password}
-						<span class="text-red-400">{$errors.password}</span>
+						<FormErrorMessage>
+							{$errors.password}
+						</FormErrorMessage>
 					{/if}
 
 					<input
@@ -67,7 +75,9 @@
 						{...$constraints.password_repeat}
 					/>
 					{#if $errors.password_repeat}
-						<span class="text-red-400">{$errors.password_repeat}</span>
+						<FormErrorMessage extraClasses="mt-4">
+							{$errors.password_repeat}
+						</FormErrorMessage>
 					{/if}
 				</section>
 				<footer class="card-footer mb-4 flex justify-end px-4">
