@@ -6,6 +6,14 @@ import { superValidate } from 'sveltekit-superforms/server';
 import PasswordsSchema from '$lib/validators/PasswordsSchema';
 import { validatePasswordResetToken } from '$lib/server/token';
 
+export async function load({ parent }) {
+	const { user } = await parent();
+	if (user?.id) throw redirect(307, '/dashboard');
+
+	const form = await superValidate(PasswordsSchema);
+	return { form };
+}
+
 export const actions: Actions = {
 	default: async ({ request, params, locals }) => {
 		const form = await superValidate(request, PasswordsSchema);

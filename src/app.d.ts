@@ -4,21 +4,22 @@
 /// <reference types="lucia-auth" />
 declare global {
 	namespace Lucia {
-		type Auth = import('$lib/server/auth').Auth
+		type Auth = import('$lib/server/auth').Auth;
 		type UserAttributes = {
-			username: string
-		}
+			username: string;
+		};
 	}
 	type DatabaseUserAttributes = {
 		email: string;
 		email_verified: boolean;
+		username: string;
 	};
 	type DatabaseSessionAttributes = Record<string, never>;
 }
 
 declare namespace App {
 	interface Locals {
-		auth: import('lucia-auth')
+		auth: import('lucia-auth');
 	}
 	// interface PageData {}
 	// interface Error {}

@@ -6,11 +6,11 @@
 
 <h2>Or</h2>
 <div class="flex flex-col">
-	<a href="/" class="btn variant-filled-primary border-b border-gray-600">
+	<a href="/login/github" class="btn variant-filled-primary border-b border-gray-600">
 		<span><IconBrandGithub size={24} /></span>
 		<span>Login with Github</span>
 	</a>
-	<a href="/" class="btn variant-filled-primary border-b border-gray-600">
+	<a href="/login/google" class="btn variant-filled-primary border-b border-gray-600">
 		<span><IconBrandGoogle size={24} /></span>
 		<span>Login with Google</span>
 	</a>
