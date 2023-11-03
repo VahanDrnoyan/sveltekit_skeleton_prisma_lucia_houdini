@@ -5,12 +5,14 @@ import { sveltekit } from 'lucia/middleware';
 import db from './database';
 import { dev } from '$app/environment';
 import 'lucia/polyfill/node';
-import { github, google } from '@lucia-auth/oauth/providers';
+import { facebook, github, google } from '@lucia-auth/oauth/providers';
 import {
 	GITHUB_CLIENT_ID,
 	GITHUB_CLIENT_SECRET,
 	GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET
+	GOOGLE_CLIENT_SECRET,
+	FACEBOOK_CLIENT_ID,
+	FACEBOOK_CLIENT_SECRET
 } from '$env/static/private';
 export const auth = lucia({
 	adapter: prisma(db, {
@@ -42,4 +44,11 @@ export const googleAuth = google(auth, {
 		'openid'
 	]
 });
+export const facebookAuth = facebook(auth, {
+	clientId: FACEBOOK_CLIENT_ID,
+	clientSecret: FACEBOOK_CLIENT_SECRET,
+	redirectUri: 'http://localhost:5173/login/facebook/callback',
+	scope: ['email', 'public_profile']
+});
+
 export type Auth = typeof auth;

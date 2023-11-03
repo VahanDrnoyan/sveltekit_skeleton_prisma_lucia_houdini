@@ -14,7 +14,7 @@
 		<span><IconBrandGoogle size={24} /></span>
 		<span>Login with Google</span>
 	</a>
-	<a href="/" class="btn variant-filled-primary">
+	<a href="/login/facebook" class="btn variant-filled-primary">
 		<span><IconBrandFacebook size={24} /></span>
 		<span>Login with Facebook</span>
 	</a>

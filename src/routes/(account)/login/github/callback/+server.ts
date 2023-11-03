@@ -1,4 +1,5 @@
 import { auth, githubAuth } from '$lib/server/auth';
+import { getUserByEmail } from '$lib/server/database.js';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 
 export const GET = async ({ url, cookies, locals }) => {
@@ -12,14 +13,23 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
+		const { getExistingUser, githubUser, createUser, createKey } =
+			await githubAuth.validateCallback(code);
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
 			if (existingUser) return existingUser;
+			if (githubUser.email) {
+				const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);
+				if (existingDatabaseUserWithEmail) {
+					// transform `UserSchema` to `User`
+					const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
+					await createKey(user.userId);
+				}
+			}
 			const user = await createUser({
 				attributes: {
-					username: githubUser.login
+					username: githubUser.name
 				}
 			});
 			return user;

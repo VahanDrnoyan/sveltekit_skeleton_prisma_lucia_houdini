@@ -1,9 +1,9 @@
-import { auth, googleAuth } from '$lib/server/auth';
-import { getUserByEmail } from '$lib/server/database.js';
+import { auth, facebookAuth } from '$lib/server/auth';
+import db, { getUserByEmail } from '$lib/server/database.js';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 
 export const GET = async ({ url, cookies, locals }) => {
-	const storedState = cookies.get('google_oauth_state');
+	const storedState = cookies.get('facebook_oauth_state');
 	const state = url.searchParams.get('state');
 	const code = url.searchParams.get('code');
 	// validate state
@@ -13,23 +13,23 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, googleUser, createUser, createKey } =
-			await googleAuth.validateCallback(code);
+		const { getExistingUser, facebookUser, createUser, createKey } =
+			await facebookAuth.validateCallback(code);
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
 			if (existingUser) return existingUser;
-			if (googleUser.email) {
-				const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);
+			if (facebookUser.email) {
+				const existingDatabaseUserWithEmail = await getUserByEmail(facebookUser.email);
 				if (existingDatabaseUserWithEmail) {
 					// transform `UserSchema` to `User`
 					const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
 					await createKey(user.userId);
-				}
+					
 			}
 			const user = await createUser({
 				attributes: {
-					username: googleUser.name
+					username: facebookUser.name
 				}
 			});
 			return user;
