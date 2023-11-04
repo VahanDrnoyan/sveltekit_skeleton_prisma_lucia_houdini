@@ -6,6 +6,7 @@ import { sendEmailVerificationLink } from '$lib/server/email';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { user } = await parent();
+	console.log(user, 6666);
 	if (!user) throw redirect(302, '/login');
 	if (user.email_verified) {
 		throw redirect(302, '/dashboard');

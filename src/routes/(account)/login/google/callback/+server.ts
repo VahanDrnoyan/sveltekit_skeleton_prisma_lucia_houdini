@@ -1,5 +1,4 @@
 import { auth, googleAuth } from '$lib/server/auth';
-import { getUserByEmail } from '$lib/server/database.js';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 
 export const GET = async ({ url, cookies, locals }) => {
@@ -13,20 +12,11 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, googleUser, createUser, createKey } =
-			await googleAuth.validateCallback(code);
+		const { getExistingUser, googleUser, createUser } = await googleAuth.validateCallback(code);
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
 			if (existingUser) return existingUser;
-			if (googleUser.email) {
-				const existingDatabaseUserWithEmail = await getUserByEmail(googleUser.email);
-				if (existingDatabaseUserWithEmail) {
-					// transform `UserSchema` to `User`
-					const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
-					await createKey(user.userId);
-				}
-			}
 			const user = await createUser({
 				attributes: {
 					username: googleUser.name

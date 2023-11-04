@@ -1,5 +1,4 @@
 import { auth, facebookAuth } from '$lib/server/auth';
-import db, { getUserByEmail } from '$lib/server/database.js';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 
 export const GET = async ({ url, cookies, locals }) => {
@@ -13,20 +12,11 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, facebookUser, createUser, createKey } =
-			await facebookAuth.validateCallback(code);
+		const { getExistingUser, facebookUser, createUser } = await facebookAuth.validateCallback(code);
 
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
 			if (existingUser) return existingUser;
-			if (facebookUser.email) {
-				const existingDatabaseUserWithEmail = await getUserByEmail(facebookUser.email);
-				if (existingDatabaseUserWithEmail) {
-					// transform `UserSchema` to `User`
-					const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
-					await createKey(user.userId);
-					
-			}
 			const user = await createUser({
 				attributes: {
 					username: facebookUser.name

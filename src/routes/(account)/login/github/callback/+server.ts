@@ -15,24 +15,21 @@ export const GET = async ({ url, cookies, locals }) => {
 	try {
 		const { getExistingUser, githubUser, createUser, createKey } =
 			await githubAuth.validateCallback(code);
-
 		const getUser = async () => {
 			const existingUser = await getExistingUser();
 			if (existingUser) return existingUser;
-			if (githubUser.email) {
-				const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);
-				if (existingDatabaseUserWithEmail) {
-					// transform `UserSchema` to `User`
-					const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
-					await createKey(user.userId);
-				}
+			const existingDatabaseUserWithEmail = await getUserByEmail(githubUser.email);
+			if (existingDatabaseUserWithEmail) {
+				// transform `UserSchema` to `User`
+				const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
+				await createKey(user.userId);
+				return user;
 			}
-			const user = await createUser({
+			return await createUser({
 				attributes: {
-					username: githubUser.name
+					email: githubUser.email
 				}
 			});
-			return user;
 		};
 
 		const user = await getUser();
@@ -48,6 +45,7 @@ export const GET = async ({ url, cookies, locals }) => {
 			}
 		});
 	} catch (e) {
+		console.log(e);
 		if (e instanceof OAuthRequestError) {
 			// invalid code
 			return new Response(null, {

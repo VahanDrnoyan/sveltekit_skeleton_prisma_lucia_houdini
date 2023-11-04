@@ -7,5 +7,4 @@ export const load: PageServerLoad = async ({ parent }) => {
 	if (!user.email_verified) {
 		throw redirect(302, '/email-verification');
 	}
-	// ...
 };

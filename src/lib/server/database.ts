@@ -10,10 +10,12 @@ export const getSessionUserFromDb = (id: string) => {
 		}
 	});
 };
-export const getUserByEmail = (email: string) => {
-	return db.user.findUnique({
-		where: {
-			email
-		}
-	});
+export const getUserByEmail = (email: string | null = null) => {
+	if (email) {
+		return db.user.findUnique({
+			where: {
+				email
+			}
+		});
+	}
 };
